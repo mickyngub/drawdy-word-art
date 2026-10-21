@@ -1,0 +1,9 @@
+{
+    "driverId": "mickyngub.word-art",
+    "driverName": "Word Art",
+    "driverVersion": "1.0.0",
+    "description": "Turn a few words into eye-catching titles on the board. Type up to three lines, pick one of six styles (retro 3D, neon, chrome, outline, bubble or rainbow wave), choose a display font, two colours, an arc and a size, then place it as a transparent image. Select it later to change the words or style and update it in place.",
+    "icon": "icon.png",
+    "main": "main.js",
+    "permissions": ["dom", "scene", "storage"]
+}
