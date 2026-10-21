@@ -70,7 +70,6 @@ const api = acquireDrawdyApi();
 const byId = <T extends HTMLElement>(id: string) =>
     document.getElementById(id) as T;
 
-const closeButton = byId<HTMLButtonElement>("close");
 const banner = byId<HTMLDivElement>("edit-banner");
 const stopEditButton = byId<HTMLButtonElement>("stop-edit");
 const previewBox = byId<HTMLDivElement>("preview-box");
@@ -81,6 +80,7 @@ const textBox = byId<HTMLTextAreaElement>("text");
 const textCount = byId<HTMLSpanElement>("text-count");
 const presetsRow = byId<HTMLDivElement>("presets");
 const statusLine = byId<HTMLDivElement>("status");
+const actions = byId<HTMLDivElement>("actions");
 const editSelectedButton = byId<HTMLButtonElement>("edit-selected");
 const placeButton = byId<HTMLButtonElement>("place");
 const updateButton = byId<HTMLButtonElement>("update");
@@ -213,7 +213,9 @@ function paintChips(): void {
 function updateChrome(): void {
     placeButton.disabled = !hasText || busy;
     updateButton.disabled = !hasText || busy;
-    placeButton.textContent = editing ? "Place as new" : "Place on board";
+    actions.dataset.editing = String(editing);
+    editSelectedButton.textContent = editing ? "Edit" : "Edit selected";
+    placeButton.textContent = editing ? "Place new" : "Place on board";
     placeButton.dataset.primary = String(!editing);
     updateButton.hidden = !editing;
     banner.hidden = !editing;
@@ -395,7 +397,6 @@ function setEditing(next: boolean): void {
 
 function wire(): void {
     textBox.addEventListener("input", () => scheduleRender(TYPING_DELAY_MS));
-    closeButton.addEventListener("click", () => send({ type: "close" }));
     placeButton.addEventListener("click", () => void sendArt("place"));
     updateButton.addEventListener("click", () => void sendArt("update"));
     editSelectedButton.addEventListener("click", () => {
@@ -456,7 +457,7 @@ function handle(message: DriverToWebview): void {
             setEditing(true);
             scheduleRender();
             setStatus(
-                "Loaded the selected word art. Change it, then click Update on board."
+                "Loaded the selected word art. Change it, then click Update."
             );
             return;
         }

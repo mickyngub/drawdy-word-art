@@ -151,7 +151,7 @@ export function makeChip(
     onClick: () => void
 ): { node: HTMLButtonElement; canvas: HTMLCanvasElement } {
     const node = button(parent, CHIP, "", onClick, caption);
-    const canvas = el("canvas", `h-9 w-full rounded-sm ${CHECKER}`, node);
+    const canvas = el("canvas", `h-10 w-full rounded-sm ${CHECKER}`, node);
     canvas.setAttribute("aria-hidden", "true");
     el("span", "truncate text-center", node).textContent = caption;
     return { node, canvas };
