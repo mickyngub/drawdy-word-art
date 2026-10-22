@@ -2,7 +2,7 @@
     "driverId": "mickyngub.word-art",
     "driverName": "Word Art",
     "driverVersion": "1.0.0",
-    "description": "Turn a word or a short title into eye-catching word art on the board. Type up to three lines, then pick a style (Retro 3D, Neon, Chrome, Outline, Bubble or Rainbow wave), a font (Bungee, Pacifico, Righteous, Anton or Rubik Mono One), its colours, an arc and a size, and place it as a transparent image. Select it later to change the words or the style and update it in place.",
+    "description": "Make your words pop. Type up to three lines, pick a style (Retro 3D, Neon, Chrome, Outline, Bubble or Rainbow wave) and a font, set the colours, arc and size, then click Place on board to add it as a crisp transparent image. Select it later and click Edit selected to change the words in place. Made for titles, posters, invites and team shout-outs.",
     "icon": "icon.png",
     "main": "main.js",
     "permissions": ["dom", "scene", "storage"]
