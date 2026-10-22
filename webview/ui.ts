@@ -36,13 +36,18 @@ export function button(
     return node;
 }
 
-function field(parent: HTMLElement, label: string, forId?: string) {
-    const wrap = el("div", "flex min-w-0 flex-col gap-1", parent);
+function field(
+    parent: HTMLElement,
+    label: string,
+    forId?: string,
+    className = "flex min-w-0 flex-col gap-1"
+) {
+    const wrap = el("div", className, parent);
     const head = el("div", "flex items-baseline justify-between gap-1.5", wrap);
     const text = el(forId ? "label" : "span", LABEL, head);
     text.textContent = label;
     if (forId) (text as HTMLLabelElement).htmlFor = forId;
-    return { wrap, head };
+    return { wrap, head, text };
 }
 
 let uid = 0;
@@ -63,12 +68,12 @@ export function makeSlider(
     spec: SliderSpec,
     initial: number,
     onInput: (value: number) => void
-): Control<number> & { input: HTMLInputElement } {
+): Control<number> & { wrap: HTMLElement } {
     const { wrap, head } = field(parent, spec.label);
     const value = el("span", "text-[10px] tabular-nums", head);
     const input = el(
         "input",
-        `h-3.5 w-full cursor-pointer accent-primary disabled:cursor-default disabled:opacity-40 ${FOCUS}`,
+        `h-3.5 w-full cursor-pointer accent-primary ${FOCUS}`,
         wrap
     );
     input.type = "range";
@@ -87,7 +92,7 @@ export function makeSlider(
         onInput(v);
     });
     return {
-        input,
+        wrap,
         set(v) {
             input.value = String(v);
             show(v);
@@ -125,12 +130,17 @@ export function makeColorInput(
     label: string,
     initial: string,
     onInput: (value: string) => void
-): Control<string> & { input: HTMLInputElement } {
+): Control<string> & { wrap: HTMLElement; setLabel(text: string): void } {
     const id = nextId("colour");
-    const { wrap } = field(parent, label, id);
+    const { wrap, text } = field(
+        parent,
+        label,
+        id,
+        "flex min-w-0 flex-1 flex-col gap-1"
+    );
     const input = el(
         "input",
-        `h-6 w-full cursor-pointer rounded-sm border border-border bg-background p-0.5 disabled:cursor-default disabled:opacity-40 ${FOCUS}`,
+        `h-6 w-full cursor-pointer rounded-sm border border-border bg-background p-0.5 ${FOCUS}`,
         wrap
     );
     input.id = id;
@@ -138,7 +148,10 @@ export function makeColorInput(
     input.value = initial;
     input.addEventListener("input", () => onInput(input.value.toLowerCase()));
     return {
-        input,
+        wrap,
+        setLabel(next) {
+            text.textContent = next;
+        },
         set(value) {
             input.value = value;
         },

@@ -18,6 +18,7 @@ import { encodeImage } from "./export";
 import { fontFailed, loadFont } from "./fonts";
 import { FONT_NAMES, FONT_STACKS } from "./lib/font-faces";
 import { isField, keyAction } from "./lib/keys";
+import { presetControls } from "./lib/preset-controls";
 import {
     canvasMeasure,
     layoutWordArt,
@@ -56,16 +57,6 @@ const PRESET_NAMES: Record<PresetId, string> = {
     wave: "Rainbow wave",
 };
 
-// Which of the two colours each preset paints with; the others are disabled.
-const USES_COLOURS: Record<PresetId, [boolean, boolean]> = {
-    retro3d: [true, true],
-    neon: [true, false],
-    chrome: [false, false],
-    outline: [true, true],
-    bubble: [true, true],
-    wave: [false, false],
-};
-
 const api = acquireDrawdyApi();
 const byId = <T extends HTMLElement>(id: string) =>
     document.getElementById(id) as T;
@@ -102,9 +93,10 @@ const chips = new Map<
 >();
 const controls: {
     font?: Control<string>;
-    colorA?: Control<string> & { input: HTMLInputElement };
-    colorB?: Control<string> & { input: HTMLInputElement };
-    arc?: Control<number> & { input: HTMLInputElement };
+    colours?: HTMLElement;
+    colorA?: ReturnType<typeof makeColorInput>;
+    colorB?: ReturnType<typeof makeColorInput>;
+    arc?: ReturnType<typeof makeSlider>;
     size?: Control<number>;
 } = {};
 
@@ -272,10 +264,21 @@ function flushSettings(): void {
 }
 
 function syncDependents(): void {
-    const [usesA, usesB] = USES_COLOURS[style.preset];
-    if (controls.colorA) controls.colorA.input.disabled = !usesA;
-    if (controls.colorB) controls.colorB.input.disabled = !usesB;
-    if (controls.arc) controls.arc.input.disabled = style.preset === "wave";
+    // Hiding a control leaves its value in the style, so switching back restores it.
+    const shown = presetControls(style.preset);
+    for (const [control, label] of [
+        [controls.colorA, shown.colorA],
+        [controls.colorB, shown.colorB],
+    ] as const) {
+        if (!control) continue;
+        control.wrap.hidden = label === null;
+        if (label !== null) control.setLabel(label);
+    }
+    if (controls.colours) {
+        controls.colours.hidden =
+            shown.colorA === null && shown.colorB === null;
+    }
+    if (controls.arc) controls.arc.wrap.hidden = !shown.arc;
     for (const [preset, chip] of chips) {
         chip.node.setAttribute("aria-pressed", String(preset === style.preset));
     }
@@ -311,18 +314,13 @@ function buildControls(): void {
         style.font,
         (font) => commit({ font: font as FontId })
     );
-    const colours = el("div", "grid grid-cols-2 gap-2", controlsRoot);
-    controls.colorA = makeColorInput(
-        colours,
-        "Main colour",
-        style.colorA,
-        (colorA) => commit({ colorA })
+    const colours = el("div", "flex gap-2", controlsRoot);
+    controls.colours = colours;
+    controls.colorA = makeColorInput(colours, "", style.colorA, (colorA) =>
+        commit({ colorA })
     );
-    controls.colorB = makeColorInput(
-        colours,
-        "Second colour",
-        style.colorB,
-        (colorB) => commit({ colorB })
+    controls.colorB = makeColorInput(colours, "", style.colorB, (colorB) =>
+        commit({ colorB })
     );
     controls.arc = makeSlider(
         controlsRoot,
