@@ -29,7 +29,7 @@ import {
     el,
     makeChip,
     makeColorInput,
-    makeSelect,
+    makeOptionGrid,
     makeSlider,
     type Control,
 } from "./ui";
@@ -307,7 +307,7 @@ function buildControls(): void {
             makeChip(presetsRow, PRESET_NAMES[preset], () => commit({ preset }))
         );
     }
-    controls.font = makeSelect(
+    controls.font = makeOptionGrid(
         controlsRoot,
         "Font",
         FONT_IDS.map((id) => [id, FONT_NAMES[id]]),
