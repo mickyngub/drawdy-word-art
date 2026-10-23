@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1
+
+- the panel now uses Drawdy's own colours and font
+- the preview has an empty state, and the selected style gets a lime ring instead of a fill
+- a restyled font grid and colour swatches
+
 ## 1.0.0
 
 First public release
