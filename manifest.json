@@ -1,7 +1,7 @@
 {
     "driverId": "mickyngub.word-art",
     "driverName": "Word Art",
-    "driverVersion": "1.0.1",
+    "driverVersion": "1.0.2",
     "description": "Make your words pop. Type up to three lines, pick a style (Retro 3D, Neon, Chrome, Outline, Bubble or Rainbow wave) and a font, set the colours, arc and size, then click Place on board to add it as a crisp transparent image. Select it later and click Edit selected to change the words in place. Made for titles, posters, invites and team shout-outs.",
     "icon": "icon.png",
     "main": "main.js",
